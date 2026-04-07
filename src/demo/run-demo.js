@@ -2,11 +2,10 @@ import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { runPipeline } from "../app/run-pipeline.js";
-import { LocalStateStore } from "../storage/local-state-store.js";
+import { createNorthWorkspace } from "../storage/north-workspace.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const fixturesDir = path.resolve(dirname, "../../fixtures/demo");
-const outputPath = path.resolve(dirname, "../../.north/demo-state.json");
 
 async function loadJson(name) {
   const fullPath = path.join(fixturesDir, name);
@@ -21,19 +20,22 @@ async function main() {
     loadJson("goals.json"),
     loadJson("task-events.json"),
   ]);
+  const workspace = createNorthWorkspace({
+    cwd: path.resolve(dirname, "../.."),
+  });
   const snapshot = await runPipeline({
     messages,
     calendarEvents,
     goals,
     taskEvents,
     now: "2026-04-07T16:00:00-07:00",
-    store: new LocalStateStore(outputPath),
+    store: workspace.stateStore,
   });
 
   process.stdout.write(
     `${JSON.stringify(
       {
-        persistedTo: outputPath,
+        persistedTo: workspace.stateStore.filePath,
         commitments: snapshot.state.commitments,
         interventions: snapshot.interventions,
       },

@@ -29,7 +29,7 @@ North is not trying to be a universal chatbot. The job is narrower:
 
 ## Current Scope
 
-This repository currently includes a zero-dependency MVP core:
+This repository currently includes a local-first MVP core:
 
 - Google-style message and calendar normalization
 - commitment extraction from inbound messages
@@ -40,6 +40,7 @@ This repository currently includes a zero-dependency MVP core:
 - fixture-driven demo pipeline
 - local file persistence for run artifacts
 - pluggable connector and judgment interfaces
+- Google OAuth and live Gmail/Calendar sync commands
 - Node test coverage for the core judgment loop
 
 ## Quick Start
@@ -59,6 +60,15 @@ Run tests:
 ```bash
 npm test
 ```
+
+Connect a real Google account:
+
+```bash
+npm run google:auth
+npm run google:sync
+```
+
+Google setup details: [Google Setup](./docs/google-setup.md)
 
 ## Architecture
 
@@ -84,7 +94,7 @@ More detail: [Architecture Notes](./docs/architecture.md)
 
 Near-term:
 
-- direct Gmail and Google Calendar ingestion
+- harden direct Gmail and Google Calendar ingestion
 - richer local persistence for entities, commitments, evidence, and feedback
 - a simple intervention feed UI
 - explicit feedback actions: confirm, dismiss, snooze, wrong
