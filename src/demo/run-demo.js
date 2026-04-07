@@ -1,14 +1,12 @@
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import { normalizeGoogleArtifacts } from "../connectors/google/normalize.js";
-import { makeGoal } from "../domain/entities.js";
-import { extractCommitments } from "../engine/extract-commitments.js";
-import { runJudgments } from "../engine/run-judgments.js";
-import { buildState } from "../engine/state.js";
+import { runPipeline } from "../app/run-pipeline.js";
+import { LocalStateStore } from "../storage/local-state-store.js";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const fixturesDir = path.resolve(dirname, "../../fixtures/demo");
+const outputPath = path.resolve(dirname, "../../.north/demo-state.json");
 
 async function loadJson(name) {
   const fullPath = path.join(fixturesDir, name);
@@ -23,22 +21,26 @@ async function main() {
     loadJson("goals.json"),
     loadJson("task-events.json"),
   ]);
-
-  const normalized = normalizeGoogleArtifacts({ messages, calendarEvents });
-  const events = [...normalized.events, ...taskEvents].sort((left, right) =>
-    left.occurredAt.localeCompare(right.occurredAt),
-  );
-  const commitments = extractCommitments(events);
-  const state = buildState({
+  const snapshot = await runPipeline({
+    messages,
+    calendarEvents,
+    goals,
+    taskEvents,
     now: "2026-04-07T16:00:00-07:00",
-    goals: goals.map(makeGoal),
-    events,
-    evidence: normalized.evidence,
-    commitments,
+    store: new LocalStateStore(outputPath),
   });
-  const interventions = runJudgments(state);
 
-  process.stdout.write(`${JSON.stringify({ commitments, interventions }, null, 2)}\n`);
+  process.stdout.write(
+    `${JSON.stringify(
+      {
+        persistedTo: outputPath,
+        commitments: snapshot.state.commitments,
+        interventions: snapshot.interventions,
+      },
+      null,
+      2,
+    )}\n`,
+  );
 }
 
 main().catch((error) => {

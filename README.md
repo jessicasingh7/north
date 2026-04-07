@@ -38,6 +38,7 @@ This repository currently includes a zero-dependency MVP core:
   - repeated deferral
   - priority drift
 - fixture-driven demo pipeline
+- local file persistence for run artifacts
 - Node test coverage for the core judgment loop
 
 ## Quick Start
@@ -76,14 +77,14 @@ Key design choice:
 - North owns the canonical user model.
 - External systems such as OpenClaw can supply integrations and runtime surfaces, but they do not define North's memory or judgment model.
 
-More detail: [Architecture Notes](/Users/jessicasingh/Documents/personal/me-agent/docs/architecture.md)
+More detail: [Architecture Notes](./docs/architecture.md)
 
 ## Roadmap
 
 Near-term:
 
 - direct Gmail and Google Calendar ingestion
-- local persistence for entities, commitments, evidence, and feedback
+- richer local persistence for entities, commitments, evidence, and feedback
 - a simple intervention feed UI
 - explicit feedback actions: confirm, dismiss, snooze, wrong
 - optional OpenClaw adapter
@@ -104,9 +105,9 @@ North is intended to be:
 
 If you want to contribute, start here:
 
-- [Contributing Guide](/Users/jessicasingh/Documents/personal/me-agent/CONTRIBUTING.md)
-- [Architecture Notes](/Users/jessicasingh/Documents/personal/me-agent/docs/architecture.md)
-- [Roadmap Issue Template](/Users/jessicasingh/Documents/personal/me-agent/.github/ISSUE_TEMPLATE/feature_request.md)
+- [Contributing Guide](./CONTRIBUTING.md)
+- [Architecture Notes](./docs/architecture.md)
+- [Roadmap Issue Template](./.github/ISSUE_TEMPLATE/feature_request.md)
 
 ## Influences
 

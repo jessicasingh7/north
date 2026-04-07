@@ -1,12 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { normalizeGoogleArtifacts } from "../connectors/google/normalize.js";
-import { makeGoal } from "../domain/entities.js";
-import { extractCommitments } from "../engine/extract-commitments.js";
-import { runJudgments } from "../engine/run-judgments.js";
-import { buildState } from "../engine/state.js";
+import { mkdtemp } from "node:fs/promises";
+import path from "node:path";
+import os from "node:os";
+import { runPipeline } from "../app/run-pipeline.js";
+import { LocalStateStore } from "../storage/local-state-store.js";
 
-test("demo pipeline emits the core intervention types", () => {
+test("demo pipeline emits the core intervention types", async () => {
   const messages = [
     {
       id: "m1",
@@ -35,30 +35,32 @@ test("demo pipeline emits the core intervention types", () => {
     { id: "d3", type: "task_deferred", threadId: "t1", occurredAt: "2026-04-04T09:00:00-07:00" },
   ];
 
-  const normalized = normalizeGoogleArtifacts({ messages, calendarEvents });
-  const events = [...normalized.events, ...taskEvents];
-  const commitments = extractCommitments(events);
-  const state = buildState({
-    now: "2026-04-07T16:00:00-07:00",
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "north-"));
+  const store = new LocalStateStore(path.join(tempDir, "state.json"));
+  const snapshot = await runPipeline({
+    messages,
+    calendarEvents,
     goals: [
-      makeGoal({
+      {
         id: "goal:recruiting",
         title: "Recruiting",
         horizon: "weekly",
         declaredAt: "2026-04-07T08:00:00-07:00",
-      }),
+      },
     ],
-    events,
-    evidence: normalized.evidence,
-    commitments,
+    taskEvents,
+    now: "2026-04-07T16:00:00-07:00",
+    store,
   });
-
-  const interventions = runJudgments(state);
+  const interventions = snapshot.interventions;
   const interventionTypes = interventions.map((item) => item.type).sort();
+  const persisted = await store.load();
 
   assert.deepEqual(interventionTypes, [
     "follow_up_due",
     "priority_drift",
     "repeated_deferral",
   ]);
+  assert.equal(persisted.interventions.length, 3);
+  assert.equal(persisted.state.commitments.length, 1);
 });
