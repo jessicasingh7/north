@@ -4,6 +4,7 @@ import { mkdtemp } from "node:fs/promises";
 import path from "node:path";
 import os from "node:os";
 import { runPipeline } from "../app/run-pipeline.js";
+import { makeIntervention } from "../domain/entities.js";
 import { LocalStateStore } from "../storage/local-state-store.js";
 
 test("demo pipeline emits the core intervention types", async () => {
@@ -63,4 +64,38 @@ test("demo pipeline emits the core intervention types", async () => {
   ]);
   assert.equal(persisted.interventions.length, 3);
   assert.equal(persisted.state.commitments.length, 1);
+});
+
+test("pipeline accepts custom judgments without editing the core runner", async () => {
+  const tempDir = await mkdtemp(path.join(os.tmpdir(), "north-"));
+  const store = new LocalStateStore(path.join(tempDir, "state.json"));
+
+  const snapshot = await runPipeline({
+    messages: [],
+    calendarEvents: [],
+    goals: [],
+    taskEvents: [],
+    now: "2026-04-07T16:00:00-07:00",
+    store,
+    judgments: [
+      {
+        id: "custom_healthcheck",
+        run() {
+          return [
+            makeIntervention({
+              id: "intervention:custom:healthcheck",
+              type: "custom_healthcheck",
+              title: "Custom plugin ran",
+              message: "A custom judgment can inject interventions.",
+              severity: "low",
+              confidence: 1,
+              evidence: [],
+            }),
+          ];
+        },
+      },
+    ],
+  });
+
+  assert.deepEqual(snapshot.interventions.map((item) => item.type), ["custom_healthcheck"]);
 });

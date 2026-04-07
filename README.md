@@ -39,6 +39,7 @@ This repository currently includes a zero-dependency MVP core:
   - priority drift
 - fixture-driven demo pipeline
 - local file persistence for run artifacts
+- pluggable connector and judgment interfaces
 - Node test coverage for the core judgment loop
 
 ## Quick Start
@@ -93,7 +94,7 @@ Longer-term:
 
 - browser context ingestion with strict permission controls
 - more judgments such as relationship neglect and stale founder/investor threads
-- pluggable connector and judgment APIs
+- richer connector and judgment APIs for external packages
 
 ## Open Source Direction
 
