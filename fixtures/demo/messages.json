@@ -1,0 +1,24 @@
+[
+  {
+    "id": "m1",
+    "threadId": "thread-recruiter",
+    "direction": "inbound",
+    "from": "recruiter@company.com",
+    "to": ["you@example.com"],
+    "subject": "Quick follow up",
+    "body": "Can you send over your availability for next week?",
+    "occurredAt": "2026-03-31T09:00:00-07:00",
+    "labels": ["important"]
+  },
+  {
+    "id": "m2",
+    "threadId": "thread-founder",
+    "direction": "inbound",
+    "from": "founder@startup.com",
+    "to": ["you@example.com"],
+    "subject": "Metrics request",
+    "body": "Could you share the updated retention chart before Thursday?",
+    "occurredAt": "2026-04-01T11:00:00-07:00",
+    "labels": ["important"]
+  }
+]

@@ -1,0 +1,14 @@
+[
+  {
+    "id": "goal:fundraising",
+    "title": "Fundraising",
+    "horizon": "weekly",
+    "declaredAt": "2026-04-07T08:00:00-07:00"
+  },
+  {
+    "id": "goal:recruiting",
+    "title": "Recruiting",
+    "horizon": "weekly",
+    "declaredAt": "2026-04-07T08:00:00-07:00"
+  }
+]

@@ -1,0 +1,16 @@
+[
+  {
+    "id": "calendar-1",
+    "title": "Weekly team sync",
+    "startAt": "2026-04-08T10:00:00-07:00",
+    "endAt": "2026-04-08T10:30:00-07:00",
+    "linkedGoalIds": []
+  },
+  {
+    "id": "calendar-2",
+    "title": "Operations review",
+    "startAt": "2026-04-08T13:00:00-07:00",
+    "endAt": "2026-04-08T14:00:00-07:00",
+    "linkedGoalIds": []
+  }
+]
