@@ -1,5 +1,5 @@
 {
-  "name": "north-agent",
+  "name": "north",
   "version": "0.1.0",
   "private": true,
   "description": "Local-first context and judgment layer for personal agents.",
