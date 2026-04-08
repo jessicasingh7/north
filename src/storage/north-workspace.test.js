@@ -16,6 +16,10 @@ test("north workspace resolves stores under .north by default", () => {
     path.join("/tmp/north-project/.north", "state", "feedback.json"),
   );
   assert.equal(
+    workspace.syncStateStore.filePath,
+    path.join("/tmp/north-project/.north", "state", "integrations.json"),
+  );
+  assert.equal(
     workspace.googleCredentialsStore.filePath,
     path.join("/tmp/north-project/.north", "config", "google-oauth.json"),
   );

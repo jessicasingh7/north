@@ -33,6 +33,9 @@ test("dashboard data merges snapshot and feedback state", async () => {
     interventionId: "i1",
     action: "dismiss",
   });
+  await workspace.syncStateStore.save({
+    gmail: { lastSyncedAt: "2026-04-07T16:05:00-07:00" },
+  });
 
   const dashboard = await buildDashboardData(workspace);
 
@@ -41,6 +44,8 @@ test("dashboard data merges snapshot and feedback state", async () => {
   assert.equal(dashboard.interventions[0].status, "dismissed");
   assert.equal(dashboard.interventions[0].statusLabel, "Dismissed prompt");
   assert.equal(dashboard.commitments[0].statusLabel, "Needs response");
+  assert.equal(dashboard.integrations[0].lastSyncedAt, "2026-04-07T16:05:00-07:00");
+  assert.equal(dashboard.integrations[0].syncEnabled, false);
 });
 
 test("createSnoozeUntil returns a future timestamp", () => {

@@ -1,6 +1,7 @@
 import { runPipeline } from "../app/run-pipeline.js";
 import { authorizeGoogle } from "../connectors/google/auth.js";
 import { fetchGoogleArtifacts } from "../connectors/google/live-sync.js";
+import { recordIntegrationSync } from "../integrations/sync-state.js";
 import { createNorthWorkspace } from "../storage/north-workspace.js";
 
 async function main() {
@@ -8,12 +9,14 @@ async function main() {
   const auth = await authorizeGoogle(workspace);
   const artifacts = await fetchGoogleArtifacts(auth);
   const goals = (await workspace.goalStore.load()) ?? [];
+  const now = new Date().toISOString();
   const snapshot = await runPipeline({
     ...artifacts,
     goals,
-    now: new Date().toISOString(),
+    now,
     store: workspace.stateStore,
   });
+  await recordIntegrationSync(workspace, ["gmail", "google-calendar"], now);
 
   process.stdout.write(
     `${JSON.stringify(

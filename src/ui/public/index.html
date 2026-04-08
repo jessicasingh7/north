@@ -17,10 +17,6 @@
             inspection first: what is active, why it fired, and whether it was right.
           </p>
         </div>
-        <div class="hero-actions">
-          <button id="sync-button" class="primary-button">Sync Google</button>
-          <p id="sync-status" class="muted">No sync running.</p>
-        </div>
       </header>
 
       <section class="stats-grid" id="stats-grid"></section>
@@ -90,6 +86,20 @@
       <article class="compact-card">
         <p class="compact-title"></p>
         <small class="compact-detail"></small>
+      </article>
+    </template>
+
+    <template id="integration-card-template">
+      <article class="integration-card">
+        <div class="integration-header">
+          <div>
+            <p class="integration-title"></p>
+            <small class="integration-status"></small>
+          </div>
+          <button class="primary-button integration-sync-button">Sync now</button>
+        </div>
+        <p class="integration-detail"></p>
+        <p class="integration-sync-note muted"></p>
       </article>
     </template>
 

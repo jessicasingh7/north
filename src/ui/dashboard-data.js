@@ -1,15 +1,16 @@
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
 export async function buildDashboardData(workspace) {
-  const [snapshot, goals, feedbackEntries, googleCredentials, googleTokens] = await Promise.all([
+  const [snapshot, goals, feedbackEntries, googleCredentials, googleTokens, syncState] = await Promise.all([
     workspace.stateStore.load(),
     workspace.goalStore.load(),
     workspace.feedbackStore.load(),
     workspace.googleCredentialsStore.load(),
     workspace.googleTokenStore.load(),
+    workspace.syncStateStore.load(),
   ]);
   const feedback = feedbackEntries ?? [];
-  const integrations = buildIntegrations({ googleCredentials, googleTokens });
+  const integrations = buildIntegrations({ googleCredentials, googleTokens, syncState: syncState ?? {} });
 
   if (!snapshot) {
     return {
@@ -133,7 +134,10 @@ function commitmentStatusLabel(commitment) {
   return "Needs response";
 }
 
-function buildIntegrations({ googleCredentials, googleTokens }) {
+function buildIntegrations({ googleCredentials, googleTokens, syncState }) {
+  const gmailSync = syncState.gmail ?? null;
+  const calendarSync = syncState["google-calendar"] ?? null;
+
   return [
     {
       id: "gmail",
@@ -149,6 +153,8 @@ function buildIntegrations({ googleCredentials, googleTokens }) {
         : googleCredentials
           ? "Credentials are present. Finish OAuth to enable sync."
           : "Add Google OAuth credentials to enable Gmail sync.",
+      lastSyncedAt: gmailSync?.lastSyncedAt ?? null,
+      syncEnabled: Boolean(googleCredentials || googleTokens),
     },
     {
       id: "google-calendar",
@@ -164,6 +170,8 @@ function buildIntegrations({ googleCredentials, googleTokens }) {
         : googleCredentials
           ? "Credentials are present. Finish OAuth to enable calendar sync."
           : "Add Google OAuth credentials to enable calendar sync.",
+      lastSyncedAt: calendarSync?.lastSyncedAt ?? null,
+      syncEnabled: Boolean(googleCredentials || googleTokens),
     },
   ];
 }
