@@ -1,12 +1,15 @@
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 
 export async function buildDashboardData(workspace) {
-  const [snapshot, goals, feedbackEntries] = await Promise.all([
+  const [snapshot, goals, feedbackEntries, googleCredentials, googleTokens] = await Promise.all([
     workspace.stateStore.load(),
     workspace.goalStore.load(),
     workspace.feedbackStore.load(),
+    workspace.googleCredentialsStore.load(),
+    workspace.googleTokenStore.load(),
   ]);
   const feedback = feedbackEntries ?? [];
+  const integrations = buildIntegrations({ googleCredentials, googleTokens });
 
   if (!snapshot) {
     return {
@@ -14,6 +17,7 @@ export async function buildDashboardData(workspace) {
       interventions: [],
       commitments: [],
       goals: goals ?? [],
+      integrations,
       stats: {
         interventionCount: 0,
         totalInterventionCount: 0,
@@ -28,24 +32,32 @@ export async function buildDashboardData(workspace) {
   const feedbackByIntervention = new Map(feedback.map((entry) => [entry.interventionId, entry]));
   const interventions = snapshot.interventions.map((intervention) => {
     const currentFeedback = feedbackByIntervention.get(intervention.id) ?? null;
+    const statusCode = deriveInterventionStatus(currentFeedback);
 
     return {
       ...intervention,
       feedback: currentFeedback,
-      status: deriveInterventionStatus(currentFeedback),
+      status: statusCode,
+      statusLabel: interventionStatusLabel(statusCode),
+      severityLabel: severityLabel(intervention.severity),
     };
   });
   const activeInterventions = interventions.filter((item) => item.status === "active");
+  const commitments = snapshot.state.commitments.map((commitment) => ({
+    ...commitment,
+    statusLabel: commitmentStatusLabel(commitment),
+  }));
 
   return {
     generatedAt: snapshot.generatedAt,
     interventions,
-    commitments: snapshot.state.commitments,
+    commitments,
     goals: snapshot.state.goals,
+    integrations,
     stats: {
       interventionCount: activeInterventions.length,
       totalInterventionCount: interventions.length,
-      commitmentCount: snapshot.state.commitments.length,
+      commitmentCount: commitments.length,
       highSeverityCount: activeInterventions.filter((item) => item.severity === "high").length,
     },
     feedback,
@@ -86,4 +98,72 @@ function deriveInterventionStatus(feedback) {
   }
 
   return "active";
+}
+
+function interventionStatusLabel(status) {
+  const labels = {
+    active: "Needs review",
+    snoozed: "Snoozed",
+    dismissed: "Dismissed prompt",
+    wrong: "Marked incorrect",
+  };
+
+  return labels[status] ?? "Needs review";
+}
+
+function severityLabel(severity) {
+  const labels = {
+    high: "High urgency",
+    medium: "Medium urgency",
+    low: "Low urgency",
+  };
+
+  return labels[severity] ?? "Unknown urgency";
+}
+
+function commitmentStatusLabel(commitment) {
+  if (commitment.status === "completed") {
+    return "Completed";
+  }
+
+  if (commitment.status === "dropped") {
+    return "Dropped";
+  }
+
+  return "Needs response";
+}
+
+function buildIntegrations({ googleCredentials, googleTokens }) {
+  return [
+    {
+      id: "gmail",
+      name: "Gmail",
+      status: googleTokens ? "connected" : googleCredentials ? "ready" : "not_configured",
+      statusLabel: googleTokens
+        ? "Connected"
+        : googleCredentials
+          ? "Credentials ready"
+          : "Not configured",
+      detail: googleTokens
+        ? "North can read recent primary inbox metadata."
+        : googleCredentials
+          ? "Credentials are present. Finish OAuth to enable sync."
+          : "Add Google OAuth credentials to enable Gmail sync.",
+    },
+    {
+      id: "google-calendar",
+      name: "Google Calendar",
+      status: googleTokens ? "connected" : googleCredentials ? "ready" : "not_configured",
+      statusLabel: googleTokens
+        ? "Connected"
+        : googleCredentials
+          ? "Credentials ready"
+          : "Not configured",
+      detail: googleTokens
+        ? "North can read upcoming primary calendar events."
+        : googleCredentials
+          ? "Credentials are present. Finish OAuth to enable calendar sync."
+          : "Add Google OAuth credentials to enable calendar sync.",
+    },
+  ];
 }

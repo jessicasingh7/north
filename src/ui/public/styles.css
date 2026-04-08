@@ -101,6 +101,29 @@ h1 {
   margin-bottom: 24px;
 }
 
+.section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.section-tab {
+  appearance: none;
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.55);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 10px 16px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.section-tab.is-active {
+  background: var(--accent);
+  color: #fff;
+}
+
 .stat-card,
 .intervention-card {
   background: var(--panel);
@@ -126,11 +149,9 @@ h1 {
 
 .content-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.8fr) minmax(280px, 0.9fr);
-  gap: 20px;
+  gap: 14px;
 }
 
-.sidebar,
 .stack {
   display: grid;
   gap: 14px;
@@ -140,6 +161,14 @@ h1 {
   padding: 20px;
 }
 
+.page-section {
+  display: none;
+}
+
+.page-section.is-active {
+  display: block;
+}
+
 .panel-header {
   margin-bottom: 16px;
 }
@@ -147,6 +176,10 @@ h1 {
 .panel-header h2 {
   margin: 0 0 6px;
   font-size: 1.3rem;
+}
+
+.panel-subsection {
+  margin-top: 24px;
 }
 
 .muted {
@@ -246,6 +279,7 @@ h1 {
   display: block;
   margin-top: 6px;
   color: var(--muted);
+  line-height: 1.45;
 }
 
 .action-row button {
@@ -263,7 +297,6 @@ h1 {
 
 @media (max-width: 900px) {
   .hero,
-  .content-grid,
   .stats-grid {
     grid-template-columns: 1fr;
   }

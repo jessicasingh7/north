@@ -6,9 +6,13 @@ const statsGrid = document.querySelector("#stats-grid");
 const interventionsList = document.querySelector("#interventions-list");
 const commitmentsList = document.querySelector("#commitments-list");
 const goalsList = document.querySelector("#goals-list");
+const integrationsList = document.querySelector("#integrations-list");
 const syncButton = document.querySelector("#sync-button");
 const syncStatus = document.querySelector("#sync-status");
 const interventionTemplate = document.querySelector("#intervention-template");
+const compactCardTemplate = document.querySelector("#compact-card-template");
+const sectionTabs = document.querySelectorAll(".section-tab");
+const pageSections = document.querySelectorAll(".page-section");
 
 syncButton.addEventListener("click", async () => {
   syncButton.disabled = true;
@@ -32,6 +36,12 @@ syncButton.addEventListener("click", async () => {
   }
 });
 
+sectionTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    setActiveSection(tab.dataset.sectionTarget);
+  });
+});
+
 loadDashboard();
 
 async function loadDashboard() {
@@ -45,13 +55,15 @@ function render() {
   renderInterventions();
   renderCompactList(commitmentsList, state.dashboard.commitments, renderCommitmentCard);
   renderCompactList(goalsList, state.dashboard.goals, renderGoalCard);
+  renderCompactList(integrationsList, state.dashboard.integrations, renderIntegrationCard);
 }
 
 function renderStats() {
   const stats = [
     ["Generated", formatGeneratedAt(state.dashboard.generatedAt)],
-    ["Active interventions", state.dashboard.stats.interventionCount],
-    ["Open commitments", state.dashboard.stats.commitmentCount],
+    ["Prompts needing review", state.dashboard.stats.interventionCount],
+    ["Open obligations", state.dashboard.stats.commitmentCount],
+    ["Connected sources", countConnectedIntegrations(state.dashboard.integrations)],
   ];
 
   statsGrid.replaceChildren(
@@ -83,15 +95,15 @@ function renderInterventions() {
       const evidenceList = fragment.querySelector(".evidence-list");
       const buttons = fragment.querySelectorAll(".action-row button");
 
-      severityBadge.textContent = intervention.severity;
+      severityBadge.textContent = intervention.severityLabel;
       severityBadge.classList.add(`severity-${intervention.severity}`);
 
-      statusBadge.textContent = intervention.status;
+      statusBadge.textContent = intervention.statusLabel;
       statusBadge.classList.add(`status-${intervention.status}`);
 
       title.textContent = intervention.title;
       message.textContent = intervention.message;
-      meta.textContent = `Type: ${intervention.type} · Confidence: ${Math.round(intervention.confidence * 100)}%`;
+      meta.textContent = `Prompt type: ${formatType(intervention.type)} · Confidence: ${Math.round(intervention.confidence * 100)}%`;
 
       evidenceList.replaceChildren(
         ...intervention.evidence.map((evidence) => {
@@ -121,16 +133,25 @@ function renderCompactList(container, items, renderItem) {
 }
 
 function renderCommitmentCard(commitment) {
-  const card = document.createElement("article");
-  card.className = "compact-card";
-  card.innerHTML = `<p>${escapeHtml(commitment.title)}</p><small>${escapeHtml(commitment.person ?? "Unknown")} · ${escapeHtml(commitment.priority ?? "unranked")}</small>`;
+  const card = compactCardTemplate.content.firstElementChild.cloneNode(true);
+  card.querySelector(".compact-title").textContent = commitment.title;
+  card.querySelector(".compact-detail").textContent =
+    `${commitment.statusLabel} · ${commitment.person ?? "Unknown"} · ${commitment.priority ?? "unranked"}`;
   return card;
 }
 
 function renderGoalCard(goal) {
-  const card = document.createElement("article");
-  card.className = "compact-card";
-  card.innerHTML = `<p>${escapeHtml(goal.title)}</p><small>${escapeHtml(goal.horizon ?? "current")}</small>`;
+  const card = compactCardTemplate.content.firstElementChild.cloneNode(true);
+  card.querySelector(".compact-title").textContent = goal.title;
+  card.querySelector(".compact-detail").textContent = goal.horizon ?? "current";
+  return card;
+}
+
+function renderIntegrationCard(integration) {
+  const card = compactCardTemplate.content.firstElementChild.cloneNode(true);
+  card.querySelector(".compact-title").textContent = integration.name;
+  card.querySelector(".compact-detail").textContent =
+    `${integration.statusLabel} · ${integration.detail}`;
   return card;
 }
 
@@ -159,6 +180,23 @@ function formatGeneratedAt(value) {
 
 function formatTimestamp(value) {
   return new Date(value).toLocaleDateString();
+}
+
+function formatType(value) {
+  return value.replaceAll("_", " ");
+}
+
+function countConnectedIntegrations(integrations) {
+  return integrations.filter((item) => item.status === "connected").length;
+}
+
+function setActiveSection(sectionName) {
+  sectionTabs.forEach((tab) => {
+    tab.classList.toggle("is-active", tab.dataset.sectionTarget === sectionName);
+  });
+  pageSections.forEach((section) => {
+    section.classList.toggle("is-active", section.dataset.section === sectionName);
+  });
 }
 
 function escapeHtml(value) {

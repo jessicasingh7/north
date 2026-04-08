@@ -39,6 +39,8 @@ test("dashboard data merges snapshot and feedback state", async () => {
   assert.equal(dashboard.stats.interventionCount, 0);
   assert.equal(dashboard.stats.totalInterventionCount, 1);
   assert.equal(dashboard.interventions[0].status, "dismissed");
+  assert.equal(dashboard.interventions[0].statusLabel, "Dismissed prompt");
+  assert.equal(dashboard.commitments[0].statusLabel, "Needs response");
 });
 
 test("createSnoozeUntil returns a future timestamp", () => {

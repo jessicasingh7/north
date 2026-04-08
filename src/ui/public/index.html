@@ -25,32 +25,43 @@
 
       <section class="stats-grid" id="stats-grid"></section>
 
+      <nav class="section-nav" aria-label="Primary sections">
+        <button class="section-tab is-active" data-section-target="interventions">Interventions</button>
+        <button class="section-tab" data-section-target="commitments">Commitments</button>
+        <button class="section-tab" data-section-target="integrations">Integrations</button>
+      </nav>
+
       <main class="content-grid">
-        <section class="panel">
+        <section class="panel page-section is-active" data-section="interventions">
           <div class="panel-header">
             <h2>Interventions</h2>
-            <p class="muted">Review what North thinks matters right now.</p>
+            <p class="muted">Prompts North wants you to review now.</p>
           </div>
           <div id="interventions-list" class="stack"></div>
         </section>
 
-        <aside class="sidebar">
-          <section class="panel">
-            <div class="panel-header">
-              <h2>Commitments</h2>
-              <p class="muted">Open obligations inferred from recent activity.</p>
-            </div>
-            <div id="commitments-list" class="stack compact"></div>
-          </section>
+        <section class="panel page-section" data-section="commitments">
+          <div class="panel-header">
+            <h2>Commitments</h2>
+            <p class="muted">Durable obligations North thinks you still owe.</p>
+          </div>
+          <div id="commitments-list" class="stack compact"></div>
+        </section>
 
-          <section class="panel">
+        <section class="panel page-section" data-section="integrations">
+          <div class="panel-header">
+            <h2>Integrations</h2>
+            <p class="muted">Connectors, permissions, and sync readiness.</p>
+          </div>
+          <div id="integrations-list" class="stack compact"></div>
+          <div class="panel-subsection">
             <div class="panel-header">
               <h2>Priorities</h2>
               <p class="muted">Current goals loaded from local config.</p>
             </div>
             <div id="goals-list" class="stack compact"></div>
-          </section>
-        </aside>
+          </div>
+        </section>
       </main>
     </div>
 
@@ -72,6 +83,13 @@
           <button data-action="snooze">Snooze 1 day</button>
           <button data-action="wrong">Mark wrong</button>
         </div>
+      </article>
+    </template>
+
+    <template id="compact-card-template">
+      <article class="compact-card">
+        <p class="compact-title"></p>
+        <small class="compact-detail"></small>
       </article>
     </template>
 
