@@ -10,6 +10,7 @@ export function createNorthWorkspace({ cwd = process.cwd(), rootDir = process.en
   return {
     rootDir: workspaceRoot,
     stateStore: new JsonFileStore(path.join(stateDir, "latest.json")),
+    feedbackStore: new JsonFileStore(path.join(stateDir, "feedback.json")),
     goalStore: new JsonFileStore(path.join(configDir, "goals.json")),
     googleCredentialsStore: new JsonFileStore(path.join(configDir, "google-oauth.json")),
     googleTokenStore: new JsonFileStore(path.join(authDir, "google-tokens.json")),

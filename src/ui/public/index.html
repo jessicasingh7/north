@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>North</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">North</p>
+          <h1>High-signal interventions, not assistant clutter.</h1>
+          <p class="lede">
+            North keeps a local view of commitments, priorities, and drift. This surface is for
+            inspection first: what is active, why it fired, and whether it was right.
+          </p>
+        </div>
+        <div class="hero-actions">
+          <button id="sync-button" class="primary-button">Sync Google</button>
+          <p id="sync-status" class="muted">No sync running.</p>
+        </div>
+      </header>
+
+      <section class="stats-grid" id="stats-grid"></section>
+
+      <main class="content-grid">
+        <section class="panel">
+          <div class="panel-header">
+            <h2>Interventions</h2>
+            <p class="muted">Review what North thinks matters right now.</p>
+          </div>
+          <div id="interventions-list" class="stack"></div>
+        </section>
+
+        <aside class="sidebar">
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Commitments</h2>
+              <p class="muted">Open obligations inferred from recent activity.</p>
+            </div>
+            <div id="commitments-list" class="stack compact"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <h2>Priorities</h2>
+              <p class="muted">Current goals loaded from local config.</p>
+            </div>
+            <div id="goals-list" class="stack compact"></div>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <template id="intervention-template">
+      <article class="intervention-card">
+        <div class="card-topline">
+          <span class="severity-badge"></span>
+          <span class="status-badge"></span>
+        </div>
+        <h3 class="card-title"></h3>
+        <p class="card-message"></p>
+        <p class="card-meta"></p>
+        <details class="evidence-block">
+          <summary>Why am I seeing this?</summary>
+          <div class="evidence-list stack compact"></div>
+        </details>
+        <div class="action-row">
+          <button data-action="dismiss">Dismiss</button>
+          <button data-action="snooze">Snooze 1 day</button>
+          <button data-action="wrong">Mark wrong</button>
+        </div>
+      </article>
+    </template>
+
+    <script type="module" src="/assets/app.js"></script>
+  </body>
+</html>

@@ -8,6 +8,7 @@
     "demo": "node src/demo/run-demo.js",
     "google:auth": "node src/cli/google-auth.js",
     "google:sync": "node src/cli/google-sync.js",
+    "ui": "node src/ui/server.js",
     "test": "node --test"
   },
   "engines": {

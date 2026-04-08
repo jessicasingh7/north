@@ -41,6 +41,7 @@ This repository currently includes a local-first MVP core:
 - local file persistence for run artifacts
 - pluggable connector and judgment interfaces
 - Google OAuth and live Gmail/Calendar sync commands
+- local web UI for interventions, evidence, and feedback actions
 - Node test coverage for the core judgment loop
 
 ## Quick Start
@@ -70,6 +71,12 @@ npm run google:sync
 
 Google setup details: [Google Setup](./docs/google-setup.md)
 
+Start the local UI:
+
+```bash
+npm run ui
+```
+
 ## Architecture
 
 ```mermaid
@@ -96,7 +103,7 @@ Near-term:
 
 - harden direct Gmail and Google Calendar ingestion
 - richer local persistence for entities, commitments, evidence, and feedback
-- a simple intervention feed UI
+- harden and expand the intervention feed UI
 - explicit feedback actions: confirm, dismiss, snooze, wrong
 - optional OpenClaw adapter
 

@@ -1,0 +1,279 @@
+:root {
+  --bg: #f4efe4;
+  --bg-accent: #efe6d3;
+  --panel: rgba(255, 250, 242, 0.86);
+  --panel-border: rgba(89, 61, 36, 0.12);
+  --text: #1e1a17;
+  --muted: #6c6259;
+  --accent: #20433a;
+  --accent-soft: #d8ebe4;
+  --warn: #a14a16;
+  --warn-soft: #f3d8c4;
+  --error: #7e1f1f;
+  --error-soft: #f0d3d3;
+  --shadow: 0 18px 55px rgba(43, 27, 10, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(32, 67, 58, 0.11), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(161, 74, 22, 0.1), transparent 24%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-accent) 100%);
+  color: var(--text);
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+}
+
+.page-shell {
+  width: min(1180px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 40px 0 56px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  gap: 24px;
+  align-items: end;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(2.8rem, 5vw, 4.8rem);
+  line-height: 0.95;
+  max-width: 12ch;
+}
+
+.lede {
+  max-width: 62ch;
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.hero-actions,
+.panel {
+  backdrop-filter: blur(18px);
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.hero-actions {
+  padding: 20px;
+}
+
+.primary-button,
+.action-row button {
+  appearance: none;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 18px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.primary-button {
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card,
+.intervention-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 24px;
+  box-shadow: var(--shadow);
+}
+
+.stat-card {
+  padding: 18px 20px;
+}
+
+.stat-label {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.stat-value {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.8fr) minmax(280px, 0.9fr);
+  gap: 20px;
+}
+
+.sidebar,
+.stack {
+  display: grid;
+  gap: 14px;
+}
+
+.panel {
+  padding: 20px;
+}
+
+.panel-header {
+  margin-bottom: 16px;
+}
+
+.panel-header h2 {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+}
+
+.muted {
+  color: var(--muted);
+  margin: 0;
+}
+
+.intervention-card {
+  padding: 18px;
+}
+
+.card-topline,
+.action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.card-title {
+  margin: 14px 0 8px;
+  font-size: 1.25rem;
+}
+
+.card-message,
+.card-meta {
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.card-meta {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.severity-badge,
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  text-transform: capitalize;
+}
+
+.severity-high {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.severity-medium {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.severity-low,
+.status-active {
+  background: rgba(32, 67, 58, 0.1);
+  color: var(--accent);
+}
+
+.status-dismissed,
+.status-snoozed {
+  background: rgba(108, 98, 89, 0.14);
+  color: var(--muted);
+}
+
+.status-wrong {
+  background: var(--error-soft);
+  color: var(--error);
+}
+
+.evidence-block {
+  margin-bottom: 14px;
+}
+
+.evidence-block summary {
+  cursor: pointer;
+  color: var(--accent);
+}
+
+.evidence-item,
+.compact-card {
+  padding: 12px 14px;
+  border-radius: 18px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.evidence-item p,
+.compact-card p {
+  margin: 0;
+}
+
+.evidence-item small,
+.compact-card small {
+  display: block;
+  margin-top: 6px;
+  color: var(--muted);
+}
+
+.action-row button {
+  background: rgba(32, 67, 58, 0.08);
+  color: var(--accent);
+}
+
+.empty-state {
+  padding: 22px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px dashed var(--panel-border);
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .hero,
+  .content-grid,
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-shell {
+    width: min(100vw - 20px, 1180px);
+    padding-top: 24px;
+  }
+
+  h1 {
+    max-width: none;
+  }
+}
